@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Nova Executor | Ultimate Roblox Script Executor</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0a1a2f 100%);
+            color: #eef5ff;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Animated gradient background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 30%, rgba(30, 60, 120, 0.4) 0%, rgba(10, 20, 40, 0.9) 80%);
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: repeating-linear-gradient(45deg, rgba(100, 150, 255, 0.03) 0px, rgba(100, 150, 255, 0.03) 2px, transparent 2px, transparent 8px);
+            animation: drift 20s linear infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(50px, 50px) rotate(2deg); }
+        }
+
+        /* container & glassmorphism */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+            animation: fadeDown 0.8s ease-out;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #ffffff, #7aa2f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            background: none;
+            -webkit-background-clip: unset;
+            color: #4c8eff;
+            margin-right: 6px;
+        }
+
+        .nav a {
+            color: #b9c8ff;
+            margin-left: 2rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav a:hover {
+            color: white;
+            text-shadow: 0 0 6px #4c8eff;
+        }
+
+        /* hero */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5rem;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 280px;
+            animation: fadeUp 0.8s ease-out 0.1s backwards;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(145deg, #ffffff, #9bb9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: #cbd5ff;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            background: rgba(76, 142, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 0.4rem 1rem;
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(76, 142, 255, 0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-card {
+            flex: 1;
+            background: rgba(15, 25, 45, 0.55);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 35px -15px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+            border-color: rgba(76, 142, 255, 0.4);
+        }
+
+        /* download section */
+        .download-area {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .version-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+        }
+
+        .version-selector label {
+            font-weight: 500;
+            color: #b9d0ff;
+        }
+
+        select {
+            background: #0f1a2c;
+            border: 1px solid #2a3a60;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        select:hover {
+            border-color: #4c8eff;
+        }
+
+        .download-btn {
+            background: linear-gradient(95deg, #2b5ee0, #4c8eff);
+            border: none;
+            color: white;
+            padding: 0.9rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 3rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 5px 15px rgba(76, 142, 255, 0.3);
+        }
+
+        .download-btn i {
+            font-size: 1.3rem;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.02);
+            background: linear-gradient(95deg, #1f4ec9, #3a79ff);
+            box-shadow: 0 8px 22px rgba(76, 142, 255, 0.5);
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .secure-note {
+            font-size: 0.8rem;
+            color: #8ea3cf;
+            margin-top: 0.5rem;
+        }
+
+        /* features grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: rgba(20, 30, 50, 0.45);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s;
+            animation: fadeUp 0.6s backwards;
+            animation-delay: calc(0.1s * var(--i, 1));
+        }
+
+        .feature-card:hover {
+            background: rgba(30, 45, 70, 0.6);
+            border-color: rgba(76, 142, 255, 0.4);
+            transform: translateY(-6px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #5e92ff;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .feature-card p {
+            color: #b9ceff;
+            font-size: 0.95rem;
+        }
+
+        /* other options (extra downloads) */
+        .extra-options {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 1.8rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        .extra-options h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .option-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .opt-btn {
+            background: rgba(30, 45, 70, 0.7);
+            border: 1px solid #3a547c;
+            padding: 0.8rem 1.6rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            transition: 0.2s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .opt-btn i {
+            font-size: 1.1rem;
+        }
+
+        .opt-btn:hover {
+            background: #2b4a8a;
+            border-color: #6c9eff;
+            transform: translateY(-2px);
+        }
+
+        /* footer */
+        footer {
+            text-align: center;
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.85rem;
+            color: #7f96c2;
+        }
+
+        /* animations */
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* responsive */
+        @media (max-width: 800px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+            .download-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .version-selector {
+                justify-content: center;
+            }
+            .download-btn {
+                justify-content: center;
+            }
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .nav a {
+                margin: 0 0.8rem;
+            }
+        }
+
+        /* toast */
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #1e2a3a;
+            backdrop-filter: blur(12px);
+            padding: 12px 24px;
+            border-radius: 60px;
+            border-left: 4px solid #4c8eff;
+            font-weight: 500;
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+<div class="bg-animation"></div>
+
+<div class="container">
+    <!-- header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-bolt"></i> NOVA<span style="color:#7aa2f7;">EXECUTOR</span>
+        </div>
+        <div class="nav">
+            <a href="#">Features</a>
+            <a href="#">Discord</a>
+            <a href="#">Docs</a>
+            <a href="#">Support</a>
+        </div>
+    </div>
+
+    <!-- hero -->
+    <div class="hero">
+        <div class="hero-text">
+            <div class="badge"><i class="fas fa-shield-alt"></i> Level 8 Execution · Undetected</div>
+            <h1>Powerful Script Execution <br> for Roblox</h1>
+            <p>Nova Executor delivers lightning-fast Lua execution, robust API support, and a sleek UI. Join thousands of users and experience next‑gen performance.</p>
+            <div class="download-area">
+                <div class="version-selector">
+                    <label><i class="fas fa-code-branch"></i> Version:</label>
+                    <select id="versionSelect">
+                        <option value="stable">Stable (v3.2.1)</option>
+                        <option value="beta">Beta (v3.5.0-beta)</option>
+                        <option value="legacy">Legacy (v2.9)</option>
+                    </select>
+                </div>
+                <button class="download-btn" id="mainDownloadBtn">
+                    <i class="fas fa-download"></i> Download Executor
+                </button>
+            </div>
+            <div class="secure-note">
+                <i class="fas fa-lock"></i> 256-bit encrypted · No malware · Auto-updates
+            </div>
+        </div>
+        <div class="hero-card">
+            <i class="fas fa-chart-line" style="font-size: 1.8rem; color:#4c8eff;"></i>
+            <h3 style="margin-top: 0.5rem;">Live Stats</h3>
+            <div style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                <div><i class="fas fa-users"></i> 12.4k active</div>
+                <div><i class="fas fa-rocket"></i> 0.7ms latency</div>
+            </div>
+            <div style="height: 8px; background: #1e2a3e; border-radius: 10px; overflow: hidden;">
+                <div style="width: 96%; height: 100%; background: linear-gradient(90deg, #4c8eff, #a0c0ff);"></div>
+            </div>
+            <p style="margin-top: 1.2rem; font-size: 0.85rem;">✅ 99.9% uptime · Supports all Roblox updates</p>
+        </div>
+    </div>
+
+    <!-- features -->
+    <div class="features">
+        <div class="feature-card" style="--i:1">
+            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+            <h3>Hyper Execution</h3>
+            <p>Blazing fast script execution with low overhead. Optimized for heavy scripts.</p>
+        </div>
+        <div class="feature-card" style="--i:2">
+            <div class="feature-icon"><i class="fas fa-shield-virus"></i></div>
+            <h3>Level 8 Security</h3>
+            <p>Advanced anti‑detection & frequent updates to stay ahead of Roblox patches.</p>
+        </div>
+        <div class="feature-card" style="--i:3">
+            <div class="feature-icon"><i class="fas fa-palette"></i></div>
+            <h3>Custom UI / Themes</h3>
+            <p>Fully customizable interface with gradient themes, draggable elements.</p>
+        </div>
+        <div class="feature-card" style="--i:4">
+            <div class="feature-icon"><i class="fas fa-globe"></i></div>
+            <h3>Built‑in Script Hub</h3>
+            <p>Access hundreds of scripts, auto‑execute, and favorite manager.</p>
+        </div>
+    </div>
+
+    <!-- other options (extra downloads / alternatives) -->
+    <div class="extra-options">
+        <h3><i class="fas fa-grip-horizontal"></i> More Options</h3>
+        <p>Choose an alternative package or companion tool</p>
+        <div class="option-buttons">
+            <div class="opt-btn" id="mobileOpt">
+                <i class="fas fa-mobile-alt"></i> Mobile Executor (Beta)
+            </div>
+            <div class="opt-btn" id="portableOpt">
+                <i class="fas fa-usb"></i> Portable Edition (USB)
+            </div>
+            <div class="opt-btn" id="apiOpt">
+                <i class="fas fa-cogs"></i> Executor API SDK
+            </div>
+            <div class="opt-btn" id="legacyOpt">
+                <i class="fas fa-history"></i> Legacy Installer
+            </div>
+        </div>
+        <div style="margin-top: 2rem; font-size: 0.85rem; background: rgba(76,142,255,0.1); padding: 0.8rem; border-radius: 1rem;">
+            <i class="fas fa-info-circle"></i> All downloads are verified and include auto-updater. No password required.
+        </div>
+    </div>
+
+    <footer>
+        <p><i class="far fa-copyright"></i> 2025 Nova Executor — For educational & private use only. Not affiliated with Roblox Corporation.</p>
+        <p style="margin-top: 0.5rem;"><i class="fab fa-discord"></i> Discord.gg/novahub  |  <i class="fab fa-github"></i> github/novalabs</p>
+    </footer>
+</div>
+
+<script>
+    // Simulate actual file download with version info
+    function triggerDownload(versionName, extraInfo = "") {
+        const content = `Nova Executor ${versionName}\n\nThis is a demonstration download. In a real scenario, this would be the actual executable.\n\nFeatures:\n- Level 8 execution\n- Script Hub\n- Auto-update\n${extraInfo}\n\nTimestamp: ${new Date().toISOString()}`;
+        const blob = new Blob([content], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `NovaExecutor_${versionName.replace(/[^a-z0-9.]/gi, '_')}.exe.txt`; // .txt to be safe, but can be .exe
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`Download started: ${versionName} (demo file)`);
+    }
+
+    function showToast(msg) {
+        // Remove existing toast if any
+        const existing = document.querySelector('.toast');
+        if(existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 8px; color:#4c8eff;"></i> ${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 2800);
+    }
+
+    // main download button: get selected version
+    const mainBtn = document.getElementById('mainDownloadBtn');
+    const versionSelect = document.getElementById('versionSelect');
+    mainBtn.addEventListener('click', () => {
+        const selectedVersion = versionSelect.options[versionSelect.selectedIndex]?.text || "Stable";
+        triggerDownload(selectedVersion, "Main package with full UI + script hub.");
+    });
+
+    // extra options handlers
+    const mobileOpt = document.getElementById('mobileOpt');
+    const portableOpt = document.getElementById('portableOpt');
+    const apiOpt = document.getElementById('apiOpt');
+    const legacyOpt = document.getElementById('legacyOpt');
+
+    mobileOpt.addEventListener('click', () => {
+        triggerDownload("Mobile_Beta_1.2", "Android compatible version (early access).");
+        showToast("Mobile executor package (Beta)");
+    });
+    portableOpt.addEventListener('click', () => {
+        triggerDownload("Portable_USB_3.0", "No installation required, run from any drive.");
+        showToast("Portable Edition (USB ready)");
+    });
+    apiOpt.addEventListener('click', () => {
+        triggerDownload("API_SDK_v2", "Includes Lua headers, documentation, and sample scripts.");
+        showToast("Executor API SDK downloaded.");
+    });
+    legacyOpt.addEventListener('click', () => {
+        triggerDownload("Legacy_v2.9", "Stable legacy version for older systems.");
+        showToast("Legacy Installer (v2.9)");
+    });
+
+    // Optional hover animation for cards
+    const cards = document.querySelectorAll('.feature-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transition = 'all 0.2s';
+        });
+    });
+
+    // Additional: smooth anchor scroll if nav had real links (demo)
+    document.querySelectorAll('.nav a').forEach(anchor => {
+        anchor.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(anchor.innerText.toLowerCase().includes('features')) {
+                document.querySelector('.features').scrollIntoView({ behavior: 'smooth' });
+            } else if(anchor.innerText.toLowerCase().includes('discord')) {
+                showToast("Join our Discord: discord.gg/novahub (demo link)");
+            } else {
+                showToast("Section coming soon — demo template");
+            }
+        });
+    });
+
+    // random gradient pulse effect on download button (additional animation)
+    let pulse = false;
+    setInterval(() => {
+        if (!pulse) {
+            mainBtn.style.transform = 'scale(1.02)';
+            pulse = true;
+            setTimeout(() => { if(mainBtn) mainBtn.style.transform = 'scale(1)'; pulse = false; }, 400);
+        }
+    }, 3000);
+</script>
+</body>
+</html>
